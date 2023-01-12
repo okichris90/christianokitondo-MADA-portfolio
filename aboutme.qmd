@@ -5,4 +5,18 @@ output:
       toc: FALSE
 ---
 
-Add some text and a figure describing myself.
+### Background
+
+I am currently a PhD student in Epidemiology & Biostatistics with concentration in Data Analysis & Modelling. My journey includes a bachelor's degree in Mathematics and a master in Statistics. Prior to joining UGA, I worked as a Biostatistician for Vanderbilt University Medical Center for a little over 3 years.
+
+### Research Interests
+
+I am interested in promoting colorectal cancer screening among early-onset patients (\< 50 years of age) and active smokers.
+
+### Goals for MADA
+
+I hope to improve my programing skills. Although I have a few years of professional experience working as a Biostatisician, I still make tones of mistakes. I would like to learn how to efficiently write R codes and explore different programming tool.
+
+### Fun Fact
+
+I was born and raised in the Congo, and moved to the US at age 18. French is my first language.
