@@ -140,9 +140,84 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Placeholder file for the future R coding exercise.</p>
+<section id="installing-dslabs-package" class="level3">
+<h3 class="anchored" data-anchor-id="installing-dslabs-package">Installing dslabs package</h3>
+<p>install.packages(“dslabs”) ###load packages library(“dslabs”) library(“dplyr”) library(“ggplot2”) ###look at help file for gapminder data help(gapminder) ###get an overview of data structure str(gapminder) ###get a summary of data summary(gapminder) #determine the type of object gapminder is class(gapminder)</p>
+</section>
+<section id="lets-view-the-curent-data" class="level3">
+<h3 class="anchored" data-anchor-id="lets-view-the-curent-data">Let’s view the curent data</h3>
+<p>View(gapminder)</p>
+<p>###Creating a dataset for only African countries africadata &lt;- gapminder %&gt;% filter(continent == “Africa”)</p>
+</section>
+<section id="view-the-africadata-created" class="level3">
+<h3 class="anchored" data-anchor-id="view-the-africadata-created">View the africadata created</h3>
+<p>View(africadata)</p>
+<p>###Get an overview of data strucure str(africadata)</p>
+<p>###Get a summary of data summary(africadata)</p>
+</section>
+<section id="create-a-new-object-from-africa-data-with-only-infant_mortality-and-life_expectancy" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-new-object-from-africa-data-with-only-infant_mortality-and-life_expectancy">Create a new object from africa data with only infant_mortality and life_expectancy</h3>
+<p>africadata_v1 &lt;- africadata[,3:4]</p>
+<p>###Get an overview of data structure str(africadata_v1)</p>
+</section>
+<section id="get-summary-of-data" class="level3">
+<h3 class="anchored" data-anchor-id="get-summary-of-data">Get summary of data</h3>
+<p>summary(africadata_v1)</p>
+</section>
+<section id="create-another-object-from-africadata-with-only-population-and-life-expectancy" class="level3">
+<h3 class="anchored" data-anchor-id="create-another-object-from-africadata-with-only-population-and-life-expectancy">Create another object from africadata with only population and life expectancy</h3>
+<p>africadata_v2 &lt;- africadata[,c(6,4)]</p>
+</section>
+<section id="get-an-overview-of-data-structure" class="level3">
+<h3 class="anchored" data-anchor-id="get-an-overview-of-data-structure">Get an overview of data structure</h3>
+<p>str(africadata_v2)</p>
+</section>
+<section id="summary-of-data" class="level3">
+<h3 class="anchored" data-anchor-id="summary-of-data">Summary of data</h3>
+<p>summary(africadata_v2)</p>
+</section>
+<section id="plot-infant-mortality-and-life-expectancy" class="level3">
+<h3 class="anchored" data-anchor-id="plot-infant-mortality-and-life-expectancy">Plot infant mortality and life expectancy</h3>
+<p>ggplot(africadata_v1, aes(x=life_expectancy, y = infant_mortality)) + geom_point()</p>
+</section>
+<section id="plot-infant-mortality-and-population-size" class="level3">
+<h3 class="anchored" data-anchor-id="plot-infant-mortality-and-population-size">Plot infant mortality and Population size</h3>
+<p>ggplot(africadata_v2, aes(x=life_expectancy, y = population)) + geom_point()</p>
+</section>
+<section id="getting-the-missing-records-for-infant-mortality" class="level3">
+<h3 class="anchored" data-anchor-id="getting-the-missing-records-for-infant-mortality">Getting the missing records for infant mortality</h3>
+<p>is.na(africadata$infant_mortality)</p>
+</section>
+<section id="new-object-excluding-missing-values" class="level3">
+<h3 class="anchored" data-anchor-id="new-object-excluding-missing-values">New object excluding missing values</h3>
+<p>africadata_2000 &lt;- africadata %&gt;% filter(year == 2000)</p>
+</section>
+<section id="check-structure-of-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="check-structure-of-the-data">Check structure of the data</h3>
+<p>str(africadata_2000)</p>
+</section>
+<section id="get-a-summary-of-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="get-a-summary-of-the-data">Get a summary of the data</h3>
+<p>summary(africadata_2000)</p>
+</section>
+<section id="ploting-life-expectancy-and-infant-mortality-for-the-year-2000" class="level3">
+<h3 class="anchored" data-anchor-id="ploting-life-expectancy-and-infant-mortality-for-the-year-2000">Ploting life expectancy and infant mortality for the year 2000</h3>
+<p>ggplot(africadata_2000, aes(x=life_expectancy, y = infant_mortality)) + geom_point()</p>
+</section>
+<section id="ploting-life-expectancy-and-population-size-for-the-year-2000" class="level3">
+<h3 class="anchored" data-anchor-id="ploting-life-expectancy-and-population-size-for-the-year-2000">Ploting life expectancy and population size for the year 2000</h3>
+<p>ggplot(africadata_2000, aes(x=life_expectancy, y = population)) + geom_point()</p>
+</section>
+<section id="fitting-a-linear-regression-using-infant-mortality-as-a-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-a-linear-regression-using-infant-mortality-as-a-predictor">Fitting a linear regression: using infant mortality as a predictor</h3>
+<p>fit1 &lt;- lm(life_expectancy ~ infant_mortality, data = africadata_2000) ### Print result summary(fit1)</p>
+</section>
+<section id="using-population-size-as-a-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="using-population-size-as-a-predictor">Using population size as a predictor</h3>
+<p>fit2 &lt;- lm(life_expectancy ~ population, data = africadata_2000) ### Print result summary(fit2)</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

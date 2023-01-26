@@ -5,4 +5,87 @@ output:
     toc: FALSE
 ---
 
-Placeholder file for the future R coding exercise.
+
+
+### Installing dslabs package
+install.packages("dslabs")
+###load packages
+library("dslabs")
+library("dplyr")
+library("ggplot2")
+###look at help file for gapminder data
+help(gapminder)
+###get an overview of data structure
+str(gapminder)
+###get a summary of data
+summary(gapminder)
+#determine the type of object gapminder is
+class(gapminder)
+
+### Let's view the curent data
+View(gapminder)
+
+###Creating a dataset for only African countries
+africadata <- gapminder %>% filter(continent == "Africa")
+
+### View the africadata created
+View(africadata)
+
+###Get an overview of data strucure
+str(africadata)
+
+###Get a summary of data
+summary(africadata)
+
+### Create a new object from africa data with only infant_mortality and life_expectancy
+africadata_v1 <- africadata[,3:4]
+
+###Get an overview of data structure
+str(africadata_v1)
+
+### Get summary of data
+summary(africadata_v1)
+
+### Create another object from africadata with only population and life expectancy
+africadata_v2 <- africadata[,c(6,4)]
+
+### Get an overview of data structure
+str(africadata_v2)
+
+### Summary of data
+summary(africadata_v2)
+
+### Plot infant mortality and life expectancy
+ggplot(africadata_v1, aes(x=life_expectancy, y = infant_mortality)) + geom_point()
+
+### Plot infant mortality and Population size
+ggplot(africadata_v2, aes(x=life_expectancy, y = population)) + geom_point()
+  
+### Getting the missing records for infant mortality
+is.na(africadata$infant_mortality)
+
+### New object excluding missing values
+africadata_2000 <- africadata %>% filter(year == 2000)
+
+### Check structure of the data
+str(africadata_2000)
+
+### Get a summary of the data
+summary(africadata_2000)
+
+### Ploting life expectancy and infant mortality for the year 2000
+ggplot(africadata_2000, aes(x=life_expectancy, y = infant_mortality)) + geom_point()
+
+### Ploting life expectancy and population size for the year 2000
+ggplot(africadata_2000, aes(x=life_expectancy, y = population)) + geom_point()
+
+### Fitting a linear regression: using infant mortality as a predictor
+fit1 <- lm(life_expectancy ~ infant_mortality, data = africadata_2000)
+### Print result
+summary(fit1)
+
+### Using population size as a predictor
+fit2 <- lm(life_expectancy ~ population, data = africadata_2000)
+### Print result
+summary(fit2)
+
