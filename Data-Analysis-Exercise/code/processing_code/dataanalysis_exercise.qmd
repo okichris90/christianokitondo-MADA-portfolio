@@ -1,0 +1,84 @@
+---
+title: "Data Analysis - Wrangling"
+author: "Chris Okitondo"
+date: "2023-02-01"
+output: html_document
+---
+
+This dataset shows health conditions and contributing causes mentioned in conjunction with deaths involving coronavirus disease 2019 (COVID-19) by age group and jurisdiction of occurrence from 2020-2023. It was downloaded from the CDC website.
+
+# Setup
+Load needed packages. make sure they are installed.
+
+```{r, echo=FALSE, message=FALSE}
+library(readxl) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+library(ggplot2) # For data visualization
+```
+
+
+# Data loading
+```{r}
+# path to data
+# note the use of the here() package and not absolute paths
+data_location<- here::here("data","raw_data","Conditions_Contributing_to_COVID-19_Deaths_2020_2023.xlsx")
+rawdata <- readxl::read_excel(data_location)
+```
+
+
+
+
+# Looking at the data
+```{r}
+dplyr::glimpse(rawdata)
+summary(rawdata)
+head(rawdata)
+skimr::skim(rawdata)
+```
+# Cleaning
+
+# Telling R to avoid using scientific notation
+```{r}
+options(scipen=999)
+```
+
+
+# List variable names
+```{r}
+names(rawdata)
+```
+
+# Let's rename some variable names
+```{r}
+rawdata <- rawdata %>% rename(current_data = `Data As Of`, start_date = `Start Date`, end_date = `End Date`, condition_group = `Condition Group`, condition = Condition, age_group = `Age Group`, covid_deaths = `COVID-19 Deaths`)
+```
+
+
+# Distribution of age group
+```{r}
+table(rawdata$age_group)
+```
+
+# Excluding data where age group is not stated
+```{r}
+rawdata <- rawdata %>% filter(age_group != 'Not stated')
+```
+Observation went from 521640 to 469476
+
+
+
+# Let's visualize at COVID deaths by age group
+```{r}
+ggplot(data = rawdata, aes(x = age_group, y = covid_deaths)) + geom_bar(stat='identity', fill = "steelblue")
+```
+
+# Saving the cleaned data
+```{r}
+save_data_location <- here::here("data","processed_data","processeddata.rds")
+saveRDS(rawdata, file = save_data_location)
+```
+
+
