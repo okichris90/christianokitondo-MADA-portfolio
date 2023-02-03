@@ -2,9 +2,8 @@
 title: "R Data Wrangling Exercise - Chris Okitondo"
 output:
   html_document:
-  toc: FALSE
+    toc: FALSE
 ---
-
 
 
 
