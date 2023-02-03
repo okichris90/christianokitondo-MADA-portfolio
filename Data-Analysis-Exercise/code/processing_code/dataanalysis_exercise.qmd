@@ -17,6 +17,7 @@ library(tidyr) #for data processing/cleaning
 library(skimr) #for nice visualization of data 
 library(here) #to set paths
 library(ggplot2) # For data visualization
+library("tinytex")
 ```
 
 
@@ -80,5 +81,7 @@ ggplot(data = rawdata, aes(x = age_group, y = covid_deaths)) + geom_bar(stat='id
 save_data_location <- here::here("data","processed_data","processeddata.rds")
 saveRDS(rawdata, file = save_data_location)
 ```
+
+
 
 
