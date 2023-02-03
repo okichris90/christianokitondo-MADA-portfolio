@@ -1,11 +1,11 @@
 ---
-title: "Data Analysis - Wrangling"
-author: "Chris Okitondo"
-date: "2023-02-01"
-output: 
-  html_document
-    toc: FALSE
+title: "R Data Wrangling Exercise - Chris Okitondo"
+output:
+  html_document:
+  toc: FALSE
 ---
+
+
 
 
 This dataset shows health conditions and contributing causes mentioned in conjunction with deaths involving coronavirus disease 2019 (COVID-19) by age group and jurisdiction of occurrence from 2020-2023. It was downloaded from the CDC website.
@@ -88,7 +88,7 @@ saveRDS(rawdata, file = save_data_location)
 
 
 
-=======
+
 ##This Section Added by Annabella Hines
 
 ```{r}
@@ -97,7 +97,7 @@ cleandata <- readRDS(file=save_data_location)
 
 
 
-##Plots##
+##Plots
 
 First I wanted to look at the number of Covid deaths by each condition group.
 ```{r}
