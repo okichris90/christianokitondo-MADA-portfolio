@@ -83,5 +83,32 @@ saveRDS(rawdata, file = save_data_location)
 ```
 
 
+<<<<<<< HEAD
 
+=======
+##This Section Added by Annabella Hines
+
+```{r}
+cleandata <- readRDS(file=save_data_location)
+```
+
+
+##Plots##
+
+First I wanted to look at the number of Covid deaths by each condition group.
+```{r}
+cleandata2 <- cleandata %>% filter(Group=="By Total")
+ggplot(cleandata2, aes(x=condition_group, y=covid_deaths))+geom_col()+xlab("Condition Group")+ylab("Covid Deaths")+ theme(axis.text.x = element_text(angle=13, size=5))
+```
+It appears that respiratory diseases had the highest number of associated Covid deaths. I now want to look at the respiratory disease by specific condition.
+```{r}
+respiratory <- cleandata2 %>% filter(condition_group=="Respiratory diseases")
+ggplot(respiratory, aes(x=condition, y=covid_deaths))+geom_col()+xlab("Respiratory Condition")+ylab("Covid Deaths")+theme(axis.text.x = element_text(angle=13))
+```
+The respiratory condition with the highest number of Covid deaths appears to be the influenza and pneumonia.
+The last thing I want to do is look as the distribution of respiratory diseases by age group.
+```{r}
+ggplot(respiratory, aes(x=age_group, y=covid_deaths, fill=condition))+geom_col()+theme(legend.key.size = unit(0.25, 'cm'), axis.text.x = element_text(angle=90))+ylab("Covid Deaths")+ xlab("Age Group")
+```
+>>>>>>> main
 
