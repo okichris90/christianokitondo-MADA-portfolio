@@ -1,8 +1,168 @@
 ---
-title: "Visualization Exercise"
+title: "Visualization Exercise: On-duty police officer deaths in the US"
 output:
   html_document:
     toc: FALSE
 ---
 
-Placeholder file for the future visualization exercise.
+The below plot from FiveThirtyEight is what I'm trying to replicate. 
+The data for on-duty police officer deaths comes from the Officer Down Memorial Page, started in 1996 by a college student who is now a police officer and who continues to maintain the database. It extends much further back than the Federal Bureau of Investigation’s data — all the way back to 1791, when two officers were killed, both in New York state. (It hadn’t yet been updated with the Dallas shootings as of Friday afternoon.) National data on the number of police officers isn’t available that far back, but the rate of police officers per the overall population has declined significantly over the years.
+
+```{r echo=FALSE, out.width = "100%", fig.align = "left"}
+knitr::include_graphics("police_deaths.png")
+```
+
+
+# Dallas shooting cleaning
+
+### Loading required libraries
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(rvest)
+library(readr)
+library(tidyr)
+library(lubridate)
+library(stringr)
+library(ggplot2)
+library(magrittr)
+library(here) 
+```
+
+
+### Data Loading
+```{r, message = FALSE, warning = FALSE}
+# path to data
+# note the use of the here() package and not absolute paths
+data_location<- here::here("Data","all_data_police_deaths.csv")
+rawdata <- readr::read_csv(data_location)
+```
+
+
+### Cleaning the fields: extracting cause of death, year
+```{r}
+clean_data <- rawdata %>%
+  mutate(
+    cause_short = gsub('Cause of Death: ', '', cause),
+    date = mdy(gsub('EOW: ', '', eow)),
+    year = year(date),
+    canine = ifelse(substr(person, 0, 2) == 'K9' & substr(person, 0, 10) != 'K9 Officer', TRUE, FALSE)
+  )
+```
+
+### Glimpse of the data
+```{r}
+glimpse(clean_data)
+```
+
+
+### Split department and state
+```{r}
+dept_state <- strsplit(clean_data$dept, ",(?=[^,]+$)", perl=TRUE)
+
+dept_state_df <- data.frame(matrix(unlist(dept_state), nrow=length(dept_state), byrow=T),stringsAsFactors=FALSE) %>% 
+  rename(dept_name=X1, state=X2)
+
+clean_data <- clean_data %>% 
+  bind_cols(dept_state_df)
+```
+
+### Glimpse of this dataframe
+```{r}
+glimpse(dept_state_df)
+```
+
+
+### Remove canines
+```{r}
+persons_data <- clean_data %>% 
+  filter(canine == FALSE) 
+```
+
+
+### Filter for major categories where count of cause of death is at least 20
+```{r, warning=FALSE, message=FALSE}
+large_categories <- persons_data %>%
+      group_by(year, cause_short) %>%
+      summarize(count = n()) %>%
+      data.frame() %>%
+      filter(count >= 20) %>%
+      select(cause_short) %>%
+      unique()
+```
+
+
+### Glimpse of data
+```{r}
+glimpse(large_categories)
+```
+
+
+### Categories of cause of death to plot 
+```{r}
+cat_to_plot <- c(large_categories$cause_short, "Gunfire (Accidental)")
+```
+
+
+### Arranging count of cause of death in descending order
+```{r}
+plot_order <- persons_data %>%
+    mutate(cat = ifelse(cause_short %in% cat_to_plot, cause_short, 'other')) %>%
+    group_by(cat) %>%
+    summarize(count = n()) %>%
+    data.frame() %>%
+    arrange(desc(count)) %>%
+    extract2(1)
+```
+
+
+### Move cause of death 'other' to the end
+```{r}
+plot_order <- c(plot_order[! (plot_order == 'other')], 'other')
+```
+
+### Glimpse of data
+```{r}
+glimpse(plot_order)
+```
+
+
+### Create data for visualization
+```{r, message=FALSE, warning=FALSE}
+data_for_plot <- persons_data %>%
+      mutate(category = ifelse(cause_short %in% cat_to_plot, cause_short, 'other')) %>%
+      group_by(year, category) %>%
+      summarize(count = n()) %>%
+      data.frame() %>%
+      spread(category, count)
+```
+
+
+### Set missing to zero
+```{r}
+data_for_plot[is.na(data_for_plot)] <- 0
+```
+
+### Glimpse of data
+```{r}
+glimpse(data_for_plot)
+```
+
+### Selecting variables yer, category of death, and count. Also arranging the category
+```{r}
+data_for_plot <- data_for_plot %>%
+      gather(category, count, -year) %>%
+      mutate(category = factor(category, levels=plot_order)) %>%
+      arrange(category)
+```
+
+
+### Plot of Deaths by cause
+```{r}
+p_area <- ggplot(data_for_plot, aes(x=year, y=count, group=category, order=category)) +
+      geom_area(aes(fill=category), position='stack')
+
+p_area + ggtitle("On-duty police officer deaths in the US", "By cause since 1791") +
+  theme(legend.position = c(0.2,0.6))
+```
+
+
