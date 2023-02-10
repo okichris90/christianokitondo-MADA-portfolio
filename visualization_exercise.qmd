@@ -103,6 +103,8 @@ cat_to_plot <- c(large_categories$cause_short, "Gunfire (Accidental)")
 ```
 
 
+?arrange
+
 ### Arranging count of cause of death in descending order
 ```{r}
 plot_order <- persons_data %>%
@@ -165,4 +167,5 @@ p_area + ggtitle("On-duty police officer deaths in the US", "By cause since 1791
   theme(legend.position = c(0.2,0.6))
 ```
 
+Reproducing this graph was an amazing experience. It was pretty fun to go through every possible detail of the origiral plot and try to perfectly reproduce it. Going through that process of "trying to be perfect" actually helps me learned other cool stuff that ggplot has to offer. One is how to manipulate the legend position in the graph.
 
