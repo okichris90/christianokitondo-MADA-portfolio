@@ -5,4 +5,93 @@ output:
     toc: FALSE
 ---
 
-Placeholder file for the future Tidy Tuesday exercise.
+### Load the required libraries
+```{r, message=FALSE, warning=FALSE}
+library("dplyr")
+library("ggplot2")
+library("stringr")
+library("tidyverse")
+```
+
+
+### Importing dataset from github tidytuesday repository
+```{r}
+dat <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-14/age_gaps.csv")
+```
+
+### Glimpse, structure, and summary of the dataset
+```{r}
+glimpse(dat)
+str(dat)
+summary(dat)
+```
+
+### Variables in the dataset
+```{r}
+names(dat)
+```
+
+
+```{r}
+table(dat$character_1_gender)
+```
+```{r}
+table(dat$character_2_gender)
+```
+
+### Let's check the distribution of men and women in these movies 
+
+##### For Character 1
+```{r}
+p1 <- ggplot(dat, aes(x = character_1_gender, y = actor_1_age)) +
+  geom_point(size = 0.1) + 
+  geom_line() + 
+  geom_boxplot() + 
+  labs(x = "Character Gender", y = "Character Age") 
+       
+p1 + ggtitle("Distribution of Age for each gender in Character One") +
+  theme(plot.title = element_text(hjust = 0.5, color = "blue")) 
+```
+From this plot, the average age for men in character 1 is around 40. This average for women is around 35. Thus, men are older compared to women for character 1.
+
+##### For Character 2
+```{r}
+p2 <- ggplot(dat, aes(x = character_2_gender, y = actor_2_age)) +
+  geom_point(size = 0.1) + 
+  geom_line() + 
+  geom_boxplot() + 
+  labs(x = "Character Gender", y = "Character Age") 
+       
+p2 + ggtitle("Distribution of Age for each gender in Character Two") +
+  theme(plot.title = element_text(hjust = 0.5, color = "blue")) 
+```
+From this plot of character 2, the average age for men is around 30, and the average for women is around 28. 
+
+### Visualizing whether the age difference increase or decrease over time
+```{r}
+p3 <- ggplot(dat, aes(x = release_year, y = age_difference)) +
+  geom_point(size = 0.5) + 
+  geom_line() + 
+  geom_smooth(method = "loess", color = "yellow", fill = "yellow") +
+  geom_smooth(method = lm, color = "blue", fill = "blue") + 
+  scale_x_continuous(breaks=c(1935, 1945, 1955, 1965, 1975, 1985, 1995, 2005, 2015, 2025))  +
+  labs(x = "Release Year", y = "Age Difference") 
+
+p3 + ggtitle("Age Difference by Release Year") +
+  theme(plot.title = element_text(hjust = 0.5, color = "blue")) 
+```
+According to this graph, it does appear that the age difference gradually decrease over time. However, it does appear that around 2005, there was some increase. The curve slightly went from down to up.
+
+#### We would like to see how the impact of couple number on age difference
+```{r}
+p4 <- ggplot(dat, aes(x = couple_number, y = age_difference, group = couple_number)) + 
+  geom_point(size = 0.2) + 
+  geom_line() + 
+  geom_boxplot(size = 0.2) +
+  labs(x = "Release Year", y = "Age Difference") 
+  
+p4 + ggtitle("Couple Number and Age Difference") +
+  theme(plot.title = element_text(hjust = 0.5, color = "blue")) 
+```
+From this graph, it seems that there greater age difference there is, the lower number of couple. 
+
