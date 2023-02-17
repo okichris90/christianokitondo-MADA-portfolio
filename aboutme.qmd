@@ -6,6 +6,9 @@ output:
 ---
 
 ### Background
+```{r echo=FALSE, out.width = "100%", fig.align = "left"}
+knitr::include_graphics("back_page_about_author.jpeg")
+```
 
 I am currently a PhD student in Epidemiology & Biostatistics with concentration in Data Analysis & Modelling. My journey includes a bachelor's degree in Mathematics and a master in Statistics. Prior to joining UGA, I worked as a Biostatistician for Vanderbilt University Medical Center for a little over 3 years.
 
