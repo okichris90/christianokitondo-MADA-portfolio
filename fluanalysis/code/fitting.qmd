@@ -1,0 +1,92 @@
+---
+title: "Model Fitting"
+author: "Chris Okitondo"
+date: "03/03/2023"
+output: html_document
+---
+
+
+In this section, we will explore the following tasks:
+1. Loads cleaned data.
+2. Fits a linear model to the continuous outcome (Body temperature) using only the main predictor of interest.
+3. Fits another linear model to the continuous outcome using all (important) predictors of interest.
+4. Compares the model results for the model with just the main predictor and all predictors.
+5. Fits a logistic model to the categorical outcome (Nausea) using only the main predictor of interest.
+6. Fits another logistic model to the categorical outcome using all (important) predictors of interest.
+7. Compares the model results for the categorical model with just the main predictor and all predictors.
+
+### Setup
+```{r, warning=FALSE, message=FALSE}
+#load needed packages. make sure they are installed.
+library(here) #for data loading/saving
+library(dplyr)
+library(skimr)
+library(ggplot2)
+library(tidyverse)
+library(tidymodels)
+library(performance)
+```
+
+
+
+### Loading data
+```{r}
+#Path to data. 
+data_location <- here::here("fluanalysis", "data", "cleaned_data.rds")
+#load data
+mydata <- readRDS(data_location)
+```
+
+
+### This sets up the linear model
+```{r}
+lm_mod <- linear_reg() %>% set_engine("lm")
+```
+
+
+### Fitting a linear model to the continuous outcome (Body temp) using only the main predictor of interest (RunnyNose)
+```{r}
+lm_fit1 <- lm_mod %>% fit(BodyTemp ~ RunnyNose, data = mydata)
+tidy(lm_fit1)
+```
+### Fitting a linear model to the continuous outcome (Body temp) using all other predictors of interest
+```{r}
+lm_fit2 <- lm_mod %>% fit(BodyTemp ~ ., data = mydata)
+tidy(lm_fit2)
+```
+### Comparing the above linear models: lm_fit1 which is a reduced model and lm_fit2 which is a full model
+```{r}
+anova(lm_fit1$fit, lm_fit2$fit)
+glance(lm_fit1) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+glance(lm_fit2) %>%
+  dplyr::select(adj.r.squared, sigma, AIC, BIC, p.value)
+# Another way to compare these models
+compare_performance(lm_fit1, lm_fit2)
+```
+
+### This sets up logistics regression
+```{r}
+log_mod <- logistic_reg() %>%
+  set_engine("glm")
+```
+
+
+### Fitting logistic model to the categorical outcome (Nausea) using only the main predictor of interest (RunnyNose)
+```{r}
+log_fit1 <- log_mod %>% fit(Nausea ~ RunnyNose, data = mydata)
+tidy(log_fit1)
+```
+### Fitting logistic model to the categorical outcome (Nausea) using all other predictors of interest 
+```{r}
+log_fit2 <- log_mod %>% fit(Nausea ~ ., data = mydata)
+tidy(log_fit2)
+```
+
+### Comparing the above logistic models: log_fit1 which is a reduced model and log_fit2 which is a full model
+```{r}
+anova(log_fit1$fit, log_fit2$fit)
+compare_performance(log_fit1, log_fit2)
+```
+
+

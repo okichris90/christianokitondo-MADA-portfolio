@@ -1,0 +1,71 @@
+---
+title: "Module 8: Data Wrangling - Chris Okitondo"
+output:
+  html_document:
+    toc: FALSE
+---
+
+### Setup
+Load needed packages. 
+```{r, echo=FALSE, message=FALSE}
+library('here')
+library('tidyverse')
+```
+
+
+### Data loading
+```{r}
+# path to data
+data_location<- here::here("fluanalysis", "data", "SympAct_Any_Pos.Rda")
+# load data
+data <- readRDS(data_location)
+```
+
+
+### Looking at the data
+```{r}
+dplyr::glimpse(data)
+summary(data)
+head(data)
+skimr::skim(data)
+```
+
+### Checking variable names 
+```{r}
+names(data)
+```
+
+### Step 1: Removing all variables that have Score or Total or FluA or FluB or Dxname or Activity in their name
+```{r}
+data1 <- data %>% dplyr:: select(-matches("Score|Total|FluA|FluB|Dxname|Activity"))
+```
+
+
+### Step 2: Removing the variable Unique.Visit.
+```{r}
+data2 <- data1[,-1]
+```
+
+### Step 3: Removing all NA observations in the dataset
+```{r}
+data3 <- na.omit(data2)
+```
+
+### Naming the newly processed data as cleaned_data
+```{r}
+cleaned_data <- data3
+```
+
+### Saving the cleaned data
+```{r}
+save_data_location <- here::here("fluanalysis", "data", "cleaned_data.rds")
+saveRDS(cleaned_data, file = save_data_location)
+```
+
+
+
+
+
+
+
+

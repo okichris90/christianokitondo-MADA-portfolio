@@ -1,0 +1,91 @@
+---
+title: "Data Exploratory Analysis"
+author: "Chris Okitondo"
+date: "03/03/2023"
+output: html_document
+---
+
+### Setup
+```{r, warning=FALSE, message=FALSE}
+#load needed packages. make sure they are installed.
+library(here) #for data loading/saving
+library(dplyr)
+library(skimr)
+library(ggplot2)
+library(tidyverse)
+library(reshape2)
+```
+
+
+### Loading data
+```{r}
+#Path to data. 
+data_location <- here::here("fluanalysis", "data", "cleaned_data.rds")
+#load data
+mydata <- readRDS(data_location)
+```
+
+
+### Looking at the data
+```{r}
+dplyr::glimpse(mydata)
+summary(mydata)
+head(mydata)
+skimr::skim(mydata)
+```
+
+### Checking variable names in the dataset
+```{r}
+names(mydata)
+```
+
+## Continuous outcome variable: Body Temperature
+### Looking at the distribution of body temperature, our continuous outcome variable
+```{r, warning=FALSE, message=FALSE}
+ggplot(mydata, aes(x = BodyTemp)) +
+  geom_histogram() + ggtitle("Distribution of Body Temperature") + theme_classic()
+```
+### Creating boxplot of Cough intensity and Body temperature variables
+```{r}
+# Creating boxplot of Cough intensity and Body temperature variables
+ggplot(mydata, aes(x = factor(CoughIntensity), y = BodyTemp)) +
+  geom_boxplot() +
+  labs(x = "Cough Intensity", y = "Body Temperature") + ggtitle("Patterns between cough intensity abd body temperature") + theme_classic()
+```
+
+### Creating boxplot of Chest Congestion and Body temperature variables
+```{r, message=FALSE, warning=FALSE}
+ggplot(mydata, aes(x = factor(ChestCongestion), y = BodyTemp)) +
+  geom_boxplot() +
+  labs(x = "Chest Congestion", y = "Body Temperature") + ggtitle("Patterns between ChestCongestion and body temperature") + theme_classic()
+```
+
+### Creating boxplot of Headache and Body temperature variables
+```{r, message=FALSE, warning=FALSE}
+# Creating boxplot of Cough intensity and Body temperature variables
+ggplot(mydata, aes(x = factor(Headache), y = BodyTemp)) +
+  geom_boxplot() +
+  labs(x = "Headache", y = "Body Temperature") + ggtitle("Patterns between Headache and body temperature") + theme_classic()
+```
+
+## Categorical outcome variable
+### The distribution of Nausea
+```{r, warning=FALSE, message=FALSE}
+ggplot(mydata, aes(x = Nausea)) +
+  geom_bar() + ggtitle("Distribution of Nausea") + theme_classic()
+```
+
+### Distribution of Nausea and Nasal Congestion
+```{r, message=FALSE, warning=FALSE}
+ggplot(mydata, aes(x = Nausea, fill = NasalCongestion)) +
+  geom_histogram(stat="count") + 
+  ggtitle("Distribution of Nausea and Nasal Congestion") + theme_classic()
+```
+
+### Distribution of Nausea and Nasal Congestion
+```{r, message=FALSE, warning=FALSE}
+ggplot(mydata, aes(x = Nausea, fill = Fatigue)) +
+  geom_histogram(stat="count") + 
+  ggtitle("Distribution of Nausea and Fatigue") + theme_classic()
+```
+
