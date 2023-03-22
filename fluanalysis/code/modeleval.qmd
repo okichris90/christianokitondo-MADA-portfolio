@@ -1,0 +1,150 @@
+---
+title: "Model Evaluation"
+author: "Chris Okitondo"
+date: "03/22/2023"
+output: html_document
+---
+
+### Loading necessary packages
+```{r, message=FALSE, warning=FALSE}
+library(here)
+library(tidyverse)
+library(tidymodels)
+library(performance)
+library(dplyr)
+library(skimr)
+```
+
+
+### Loading previously processed data
+```{r, message=FALSE, warning=FALSE}
+#Path to data. 
+data_location <- here::here("fluanalysis", "data", "cleaned_data.rds")
+#load data
+mydata <- readRDS(data_location)
+```
+
+
+### Data splitting
+* Here, we are splitting our data into two subsets. 3/4 for the training and 1/4 for test.
+```{r}
+# To maintain reproducible results when re-done.
+set.seed(1234) 
+
+# Proceeding with 75% for training and 25% for test data
+split <- initial_split(mydata, prop = 3/4)
+```
+
+#### Dataframe for the training and test data
+```{r}
+train_data <- training(split)
+test_data  <- testing(split)
+```
+
+* Training data set now contains 547 observations while test data contains 183.
+
+### Workflow creation and model fitting
+
+#### FULL MODEL: Creating recipe that fits a logistic model with nausea as the outcome and all the predictors in the data 
+
+```{r, warning=FALSE, message=FALSE}
+# Outcome is nausea. The rest of variables are all predictors
+# Recipe #1: Nausea predicted by all variables
+flu_mod10_rec <- recipe(Nausea ~ ., data = train_data)
+
+# Model: logistic regression using GLM engine
+flu_mod10_mod <- logistic_reg() %>% 
+                    set_engine("glm")
+
+# Workflow: Pairing model and recipe 
+flu_mod10_workflow <- workflow() %>% 
+  add_model(flu_mod10_mod) %>% 
+  add_recipe(flu_mod10_rec)
+# Pring workflow
+flu_mod10_workflow
+
+# Fitting the model to a training dataset
+flu_mod10_fit <- 
+ flu_mod10_workflow %>% 
+  fit(data = train_data)
+
+# Looking at the model output
+flu_mod10_fit %>% 
+  extract_fit_parsnip() %>% 
+  tidy()
+```
+
+#### FULL MODEL: USING trained workflow to predict unseen test data
+
+```{r, warning = FALSE, message=FALSE}
+# Using the trained workflow (flu_mod10_fit) to predict with the unseen test data
+predict(flu_mod10_fit, test_data)
+
+# Using argument() with the model plus test data for saving them together
+flu_mod10_aug <- 
+  augment(flu_mod10_fit, test_data)
+  
+flu_mod10_aug %>%
+  select(Nausea, .pred_No, .pred_Yes)
+  
+# Plotting ROC curve
+flu_mod10_aug %>% 
+  roc_curve(truth = Nausea, .pred_No) %>% 
+  autoplot()
+
+# Using roc_auc() to get the estimates
+flu_mod10_aug %>% 
+  roc_auc(truth = Nausea, .pred_No)
+```
+
+
+#### ALTERNATIVE MODEL: Outcome is still nausea and predictor is runnynose 
+```{r, warning=FALSE, message=FALSE}
+# Using Nausea as a categorical outcome of interest and RunnyNose as main predictor
+flu_mod10_rec2 <- recipe(Nausea ~ RunnyNose, data = train_data)
+
+# Fitting the logistic model
+flu_mod10_mod2 <- logistic_reg() %>% 
+                    set_engine("glm")
+
+# Modelling workflow for pairing model and recipe 
+flu_mod10_workflow2 <- workflow() %>% 
+  add_model(flu_mod10_mod2) %>% 
+  add_recipe(flu_mod10_rec2)
+
+flu_mod10_workflow2
+# Using the resulting predictors for preparing recipe and training the model
+flu_mod10_fit2 <- 
+ flu_mod10_workflow2 %>% 
+  fit(data = train_data)
+
+# Pulling the fitted model object and using tidy() function for getting a tidy tibble of model coefficients
+flu_mod10_fit2 %>% 
+  extract_fit_parsnip() %>% 
+  tidy()
+```
+
+**ALTERNATIVE MODEL: USING TRAINED WORKFLOW TO PREDICT**
+
+```{r, warning = FALSE, message=FALSE}
+# Using the trained data to predict with the unseen test data
+predict(flu_mod10_fit2, test_data)
+
+# Using argument() with the model plus test data for saving them together
+flu_mod10_aug2 <- 
+  augment(flu_mod10_fit2, test_data)
+  
+flu_mod10_aug2 %>%
+  select(Nausea, .pred_No, .pred_Yes)
+  
+# Creating ROC curve and piping to the autoplot() method
+flu_mod10_aug2 %>% 
+  roc_curve(truth = Nausea, .pred_No) %>% 
+  autoplot()
+# Estimating the area under the curve 
+flu_mod10_aug2 %>% 
+  roc_auc(truth = Nausea, .pred_No)
+```
+
+Given this result, the full model using all variables as predictors perform better the reduced model with only RunnyNose as predictor. The full model as a ROC-AUC of 0.71 compared the reduced model with ROC-AUC of 0.46
+
