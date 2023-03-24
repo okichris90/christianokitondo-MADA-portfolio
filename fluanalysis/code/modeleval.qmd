@@ -148,3 +148,137 @@ flu_mod10_aug2 %>%
 
 Given this result, the full model using all variables as predictors perform better the reduced model with only RunnyNose as predictor. The full model as a ROC-AUC of 0.71 compared the reduced model with ROC-AUC of 0.46
 
+# This section is added by ABBIE KLINKER 
+
+## Continuous + Everything
+
+Recipe for a regression model to our categorical outcome of interest (BodyTemp)
+
+```{r}
+cont_recipe1 <- 
+  recipe(BodyTemp ~ ., data = train_data) 
+
+```
+
+### Fit a Model with Workflow
+
+```{r}
+cont_model1 <- 
+  linear_reg()  %>% 
+  set_engine("lm") 
+
+cont1_wflow <- 
+  workflow() %>% 
+  add_model(cont_model1) %>% 
+  add_recipe(cont_recipe1)
+
+cont1_fit <- 
+  cont1_wflow %>% 
+  fit(data = train_data)
+
+cont1_fit %>% 
+  extract_fit_parsnip() %>% 
+  tidy()
+```
+
+Check with testing data
+
+```{r}
+predict(cont1_fit, test_data)
+
+cont1_aug <- 
+  augment(cont1_fit, test_data)
+
+cont1_aug
+
+```
+
+### RMSE
+
+*Training Data*
+
+```{r}
+cont1_train <- 
+  augment(cont1_fit, train_data)
+
+yardstick::rmse(cont1_train, BodyTemp, .pred)
+
+```
+
+*Testing Data*
+
+```{r}
+yardstick::rmse(cont1_aug, BodyTemp, .pred)
+
+```
+
+We see that the training data performed a bit better with our RMSE estimated to be 1.12 versus with the tested data at 1.15, but both are within 0.03 of one another, which is not a bad amount. *woo*
+
+## Continuous + Main Predictor (RunnyNose)
+
+Recipe for a logistic model to our categorical outcome of interest (Nausea)
+
+```{r}
+cont_recipe2 <- 
+  recipe(BodyTemp ~ RunnyNose, data = train_data) 
+
+```
+
+### Fit a Model with Workflow
+
+```{r}
+cont_model2 <- 
+  linear_reg()  %>% 
+  set_engine("lm") 
+
+cont2_wflow <- 
+  workflow() %>% 
+  add_model(cont_model2) %>% 
+  add_recipe(cont_recipe2)
+
+cont2_fit <- 
+  cont2_wflow %>% 
+  fit(data = train_data)
+
+cont2_fit %>% 
+  extract_fit_parsnip() %>% 
+  tidy()
+```
+
+### RMSE
+
+*Testing Data* 
+
+Check model with testing data
+
+```{r}
+predict(cont2_fit, test_data)
+
+cont2_aug <- 
+  augment(cont2_fit, test_data)
+
+cont2_aug
+
+## RMSE - TEST
+yardstick::rmse(cont2_aug, BodyTemp, .pred)
+
+```
+
+*Training Data*
+
+Compare the outcome of the tested data with the original.
+
+```{r}
+cont2_train <- 
+  augment(cont2_fit, train_data)
+
+yardstick::rmse(cont2_train, BodyTemp, .pred)
+
+```
+Unlike our previous model, the testing model performed better while using RunnyNose as the only predictor than the testing model with all predictors compared to the training model. This model has a more substantial difference between the RMSEs with the training model  = 1.21 and the testing model = 1.13. 
+
+When we compare the model predictors that should be included based on RMSE, we have pretty comparable RMSEs. For the testing datasets, RunnyNose alone was a better model, but for the testing models, all predictors performed better. 
+
+To have a more conclusive model, I would run this simulation again with different splits in the data and see if the test/train models perform the same, or if we see some more variation depending how the data is split. However, off the bat and from these attempted models alone, I would recommend to use the RunnyNose alone as a predictor. This is because at the moment, its application is comparable if not better than all variables used, with a considerably more simple model. Other evaluation methods may yield different results, but based off RMSE alone, the potentially higher RMSE for trained data is a valid trade off for a more intuitive model and results. 
+
+
