@@ -197,4 +197,4 @@ lasso_test_data %>%
 
 ```
 
-We got RMSE of 1.1
+We got RMSE of 1.10
