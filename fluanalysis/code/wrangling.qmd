@@ -10,6 +10,7 @@ Load needed packages.
 ```{r, echo=FALSE, message=FALSE}
 library('here')
 library('tidyverse')
+library('dplyr')
 ```
 
 
@@ -63,6 +64,30 @@ saveRDS(cleaned_data, file = save_data_location)
 ```
 
 
+### Addition for Module 11: Preparing data for Machine Learning
+
+
+#### Loading the previous cleaned data for additional cleaning
+```{r}
+cleaned_data <- readRDS(here("fluanalysis", "data", "cleaned_data.rds"))
+```
+
+
+#### We are getting rid of repetitive variables
+```{r}
+cleaned_data_v2 <- cleaned_data %>% select(-CoughYN,-WeaknessYN,-CoughYN2,-MyalgiaYN)
+
+```
+
+#### We are getting rid of hearing and vision variables since they have less than 5- entries (Y/N)
+```{r}
+cleaned_data_v3 <- cleaned_data_v2 %>% select(-Vision,-Hearing)
+```
+
+Our data is now made of 730 observations and 26 variables. This is what we will use for Module 11.
+```{r}
+saveRDS(cleaned_data_v3, file = here("fluanalysis", "data", "cleaned_data_mod11.rds"))
+```
 
 
 

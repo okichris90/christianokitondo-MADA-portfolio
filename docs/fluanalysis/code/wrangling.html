@@ -186,6 +186,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="dropdown-item" href="../.././fluanalysis/code/fitting.html">
  <span class="dropdown-text">Fitting</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../.././fluanalysis/code/modeleval.html">
+ <span class="dropdown-text">Model Evaluation</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -1305,8 +1309,33 @@ $ TotalSymp3        &lt;dbl&gt; 8, 9, 16, 15, 11, 14, 10, 10, 12, 9, 13, 18, 12,
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>save_data_location <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"fluanalysis"</span>, <span class="st">"data"</span>, <span class="st">"cleaned_data.rds"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(cleaned_data, <span class="at">file =</span> save_data_location)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="addition-for-module-11-preparing-data-for-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="addition-for-module-11-preparing-data-for-machine-learning">Addition for Module 11: Preparing data for Machine Learning</h3>
+<section id="loading-the-previous-cleaned-data-for-additional-cleaning" class="level4">
+<h4 class="anchored" data-anchor-id="loading-the-previous-cleaned-data-for-additional-cleaning">Loading the previous cleaned data for additional cleaning</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cleaned_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">here</span>(<span class="st">"fluanalysis"</span>, <span class="st">"data"</span>, <span class="st">"cleaned_data.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="we-are-getting-rid-of-repetitive-variables" class="level4">
+<h4 class="anchored" data-anchor-id="we-are-getting-rid-of-repetitive-variables">We are getting rid of repetitive variables</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cleaned_data_v2 <span class="ot">&lt;-</span> cleaned_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>CoughYN,<span class="sc">-</span>WeaknessYN,<span class="sc">-</span>CoughYN2,<span class="sc">-</span>MyalgiaYN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="we-are-getting-rid-of-hearing-and-vision-variables-since-they-have-less-than-5--entries-yn" class="level4">
+<h4 class="anchored" data-anchor-id="we-are-getting-rid-of-hearing-and-vision-variables-since-they-have-less-than-5--entries-yn">We are getting rid of hearing and vision variables since they have less than 5- entries (Y/N)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cleaned_data_v3 <span class="ot">&lt;-</span> cleaned_data_v2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Vision,<span class="sc">-</span>Hearing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Our data is now made of 730 observations and 26 variables. This is what we will use for Module 11.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(cleaned_data_v3, <span class="at">file =</span> <span class="fu">here</span>(<span class="st">"fluanalysis"</span>, <span class="st">"data"</span>, <span class="st">"cleaned_data_mod11.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
