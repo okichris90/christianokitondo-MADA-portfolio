@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "tidytuesday_exercise2.html",
+    "href": "tidytuesday_exercise2.html",
+    "title": "Tidy Tuesday Exercise",
+    "section": "",
+    "text": "“To be filled”"
+  },
+  {
     "objectID": "tidytuesday_exercise.html",
     "href": "tidytuesday_exercise.html",
     "title": "Tidy Tuesday Exercise",
@@ -11,7 +18,7 @@
     "href": "aboutme.html",
     "title": "About me",
     "section": "",
-    "text": "Background\n\n\n\n\n\n\n\n\n\nI am currently a PhD student in Epidemiology & Biostatistics with concentration in Data Analysis & Modelling. My journey includes a bachelor’s degree in Mathematics and a master in Statistics. Prior to joining UGA, I worked as a Biostatistician for Vanderbilt University Medical Center for a little over 3 years.\n\n\nResearch Interests\nI am interested in promoting colorectal cancer screening among early-onset patients (< 50 years of age) and active smokers.\n\n\nGoals for MADA\nI hope to improve my programming skills. Although I have a few years of professional experience working as a Biostatisician, I still make tones of mistakes on a daily basis. There is still a huge opportunity for learning, I would like to learn how to efficiently write R codes and explore different programming tool.\n\n\nFun Fact\nI released my first book over last summer. Title is “The Champion In You”. It is a memoir discussing my journey from growing up in Congo till where I am today with my career/Education. I’m discussing the challenges met and strategies for copind."
+    "text": "Background\n\n\n\n\n\n\n\n\n\nI am currently a PhD student in Epidemiology & Biostatistics with concentration in Data Analysis & Modelling. My journey includes a bachelor’s degree in Mathematics and a master in Statistics. Prior to joining UGA, I worked as a Biostatistician for Vanderbilt University Medical Center for a little over 3 years.\n\n\nResearch Interests\nI am interested in promoting colorectal cancer screening among early-onset patients (< 50 years of age).\n\n\nGoals for MADA\nI hope to improve my programming skills. Although I have a few years of professional experience working as a Biostatisician, I still make tones of mistakes on a daily basis. There is still a huge opportunity for learning, I would like to learn how to efficiently write R codes and explore different programming tool.\n\n\nFun Fact\nI released my first book over last summer. Title is “The Champion In You”. It is a memoir discussing my journey from growing up in Congo till where I am today with my career/Education. I’m discussing the challenges met and strategies for copind."
   },
   {
     "objectID": "visualization_exercise.html",
