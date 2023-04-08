@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "My Data Analysis Portfolio"
+  title: "Christian Okitondo Data Analysis Portfolio"
   navbar:
     left:
       - text: "About Me"
@@ -33,7 +33,7 @@ website:
  
     right:
       - icon: github 
-        href: https://okichris90.github.io/christianokitondo-MADA-portfolio/        
+        href: https://github.com/okichris90/christianokitondo-MADA-portfolio       
 
 format:
   html:
